@@ -62,6 +62,7 @@ td:first-child { text-align: left; }
 tr:last-child td { border-bottom: none; }
 .date { font-weight: 600; color: #1F4E78; }
 .winner { background: #fef3c7; font-weight: 600; border-radius: 4px; color: #78350f; }
+.avg-score { font-weight: 600; color: #1F4E78; }
 .name { text-align: left; }
 .footer { font-size: 11px; color: #6b7280; margin-top: 24px; text-align: center; }
 .chart-container { position: relative; height: 300px; margin-top: 16px; }
@@ -100,7 +101,7 @@ tr:last-child td { border-bottom: none; }
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script>
-const DATA = {"players": ["James", "Joey", "Greg", "Brendan", "Connor", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24"], "scores": {"2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827, "Connor": 960, "Joey": 939}}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Connor"}, "leaderboard": [{"name": "Connor", "wins": 3, "games": 5, "win_pct": 60, "avg_score": 870, "avg_finish": 2.2}, {"name": "James", "wins": 2, "games": 3, "win_pct": 67, "avg_score": 877, "avg_finish": 2.7}, {"name": "Brendan", "wins": 0, "games": 4, "win_pct": 0, "avg_score": 874, "avg_finish": 3.0}, {"name": "Greg", "wins": 0, "games": 5, "win_pct": 0, "avg_score": 844, "avg_finish": 3.2}, {"name": "Joey", "wins": 0, "games": 5, "win_pct": 0, "avg_score": 843, "avg_finish": 3.4}, {"name": "Mark", "wins": 0, "games": 2, "win_pct": 0, "avg_score": 826, "avg_finish": 4.0}], "stats": {"most_wins_players": "Connor", "most_wins_count": 3, "games_played": 24, "avg_overall": 857, "highest": 960, "highest_detail": "Connor, Apr 24", "lowest": 716, "lowest_detail": "Mark, Apr 19", "y_min": 700}};
+const DATA = {"players": ["James", "Joey", "Greg", "Brendan", "Connor", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24"], "scores": {"2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827, "Connor": 960, "Joey": 939}}, "daily_avgs": {"2026-04-19": 838, "2026-04-20": 836, "2026-04-22": 831, "2026-04-23": 877, "2026-04-24": 889}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Connor"}, "leaderboard": [{"name": "Connor", "wins": 3, "games": 5, "win_pct": 60, "avg_score": 870, "avg_finish": 2.2}, {"name": "James", "wins": 2, "games": 3, "win_pct": 67, "avg_score": 877, "avg_finish": 2.7}, {"name": "Brendan", "wins": 0, "games": 4, "win_pct": 0, "avg_score": 874, "avg_finish": 3.0}, {"name": "Greg", "wins": 0, "games": 5, "win_pct": 0, "avg_score": 844, "avg_finish": 3.2}, {"name": "Joey", "wins": 0, "games": 5, "win_pct": 0, "avg_score": 843, "avg_finish": 3.4}, {"name": "Mark", "wins": 0, "games": 2, "win_pct": 0, "avg_score": 826, "avg_finish": 4.0}], "stats": {"most_wins_players": "Connor", "most_wins_count": 3, "games_played": 24, "avg_overall": 857, "highest": 960, "highest_detail": "Connor, Apr 24", "lowest": 716, "lowest_detail": "Mark, Apr 19", "y_min": 700}};
 const COLORS = { James:"#2563eb", Joey:"#dc2626", Greg:"#16a34a", Brendan:"#9333ea", Connor:"#ea580c", Mark:"#0891b2" };
 
 function fmtFinish(n) {
@@ -167,6 +168,7 @@ leaderboardBody.innerHTML = lbRows.join("");
 const headerRow = document.getElementById("header");
 const headerCells = ["<th style='text-align: left;'>Date</th>"];
 headerCells.push(...DATA.players.map(p => `<th>${p}</th>`));
+headerCells.push("<th>Avg Score</th>");
 headerCells.push("<th>Winner</th>");
 headerRow.innerHTML = headerCells.join("");
 
@@ -174,6 +176,7 @@ const scoresBody = document.getElementById("scores");
 const rows = DATA.dates.map(d => {
   const dayScores = DATA.scores[d] || {};
   const winner = DATA.winners[d] || "—";
+  const dayAvg = DATA.daily_avgs[d] || "—";
   const cells = [];
   cells.push(`<td class="date">${new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"})}</td>`);
   for (let p of DATA.players) {
@@ -181,6 +184,7 @@ const rows = DATA.dates.map(d => {
     const isWinner = p === winner ? " winner" : "";
     cells.push(`<td class="${isWinner}">${score || "—"}</td>`);
   }
+  cells.push(`<td class="avg-score">${dayAvg}</td>`);
   cells.push(`<td class="winner">${winner}</td>`);
   return `<tr>${cells.join("")}</tr>`;
 });
