@@ -10,29 +10,58 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; 
   margin: 0; 
   padding: 20px; 
-  background: transparent; 
+  background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f7 100%);
   color: #1a1a1a; 
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 100vh;
 }
 h1 { margin: 0 0 8px 0; font-size: 28px; color: #1F4E78; }
 .sub { color: #6b7280; font-size: 13px; margin-bottom: 24px; }
 .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
 @media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-.stat { background: linear-gradient(135deg, #1F4E78 0%, #2563eb 100%); color: white; border-radius: 10px; padding: 16px; }
-.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 4px; }
-.stat-value { font-size: 24px; font-weight: 700; }
+.stat { 
+  background: linear-gradient(135deg, #1F4E78 0%, #2563eb 100%); 
+  color: white; 
+  border-radius: 10px; 
+  padding: 16px; 
+  box-shadow: 0 4px 12px rgba(31, 78, 120, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+.stat::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200px;
+  height: 200px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+.stat.highest { background: linear-gradient(135deg, #059669 0%, #10b981 100%); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.2); }
+.stat.lowest { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2); }
+.stat.wins { background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.2); }
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 4px; position: relative; z-index: 1; }
+.stat-value { font-size: 24px; font-weight: 700; position: relative; z-index: 1; }
+.stat-detail { font-size: 11px; opacity: 0.85; margin-top: 6px; position: relative; z-index: 1; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
 @media (max-width: 1200px) { .grid { grid-template-columns: 1fr; } }
-.card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
-h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; }
+.card { 
+  background: #ffffff; 
+  border: 1px solid #e5e7eb; 
+  border-radius: 10px; 
+  padding: 20px; 
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: center; padding: 10px; background: #f3f4f6; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; }
+th { text-align: center; padding: 12px; background: linear-gradient(135deg, #f0f4f8 0%, #e8f0f7 100%); font-weight: 600; color: #1F4E78; border-bottom: 2px solid #e5e7eb; }
 td { padding: 10px; border-bottom: 1px solid #f3f4f6; text-align: center; }
 td:first-child { text-align: left; }
 tr:last-child td { border-bottom: none; }
 .date { font-weight: 600; color: #1F4E78; }
-.winner { background: #fef3c7; font-weight: 600; }
+.winner { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); font-weight: 600; border-radius: 4px; }
 .name { text-align: left; }
 .footer { font-size: 11px; color: #9ca3af; margin-top: 24px; text-align: center; }
 .chart-container { position: relative; height: 300px; margin-top: 16px; }
@@ -73,19 +102,38 @@ tr:last-child td { border-bottom: none; }
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script>
-const DATA = {"players": ["James", "Joey", "Greg", "Brendan", "Connor", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24"], "scores": {"2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827}}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Mark"}, "leaderboard": [{"name": "James", "wins": 2, "games": 3, "win_pct": 67}, {"name": "Connor", "wins": 2, "games": 4, "win_pct": 50}, {"name": "Mark", "wins": 1, "games": 2, "win_pct": 50}, {"name": "Brendan", "wins": 0, "games": 4, "win_pct": 0}, {"name": "Greg", "wins": 0, "games": 5, "win_pct": 0}, {"name": "Joey", "wins": 0, "games": 4, "win_pct": 0}], "stats": {"most_wins_players": "James, Connor", "games_played": 22, "highest": 937, "lowest": 716}};
+const DATA = {"players": ["James", "Joey", "Greg", "Brendan", "Connor", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24"], "scores": {"2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827}}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Mark"}, "leaderboard": [{"name": "James", "wins": 2, "games": 3, "win_pct": 67}, {"name": "Connor", "wins": 2, "games": 4, "win_pct": 50}, {"name": "Mark", "wins": 1, "games": 2, "win_pct": 50}, {"name": "Brendan", "wins": 0, "games": 4, "win_pct": 0}, {"name": "Greg", "wins": 0, "games": 5, "win_pct": 0}, {"name": "Joey", "wins": 0, "games": 4, "win_pct": 0}], "stats": {"most_wins_players": "Connor, James", "most_wins_count": 2, "games_played": 22, "highest": 937, "highest_detail": "Mark, Apr 24", "lowest": 716, "lowest_detail": "Mark, Apr 19"}};
 const COLORS = { James:"#2563eb", Joey:"#dc2626", Greg:"#16a34a", Brendan:"#9333ea", Connor:"#ea580c", Mark:"#0891b2" };
 
 // Stats ribbon
 const statsHtml = [
-  { label: "Most Wins", value: DATA.stats.most_wins_players },
-  { label: "Games Played", value: DATA.stats.games_played },
-  { label: "Highest Score", value: DATA.stats.highest },
-  { label: "Lowest Score", value: DATA.stats.lowest },
+  { 
+    label: "Most Wins", 
+    value: DATA.stats.most_wins_players + " (" + DATA.stats.most_wins_count + ")",
+    className: "wins"
+  },
+  { 
+    label: "Scores Submitted", 
+    value: DATA.stats.games_played,
+    className: ""
+  },
+  { 
+    label: "Highest Score", 
+    value: DATA.stats.highest,
+    detail: DATA.stats.highest_detail,
+    className: "highest"
+  },
+  { 
+    label: "Lowest Score", 
+    value: DATA.stats.lowest,
+    detail: DATA.stats.lowest_detail,
+    className: "lowest"
+  },
 ].map(s => `
-  <div class="stat">
+  <div class="stat ${s.className}">
     <div class="stat-label">${s.label}</div>
     <div class="stat-value">${s.value}</div>
+    ${s.detail ? `<div class="stat-detail">${s.detail}</div>` : ''}
   </div>
 `).join("");
 document.getElementById("stats").innerHTML = statsHtml;
@@ -162,6 +210,8 @@ new Chart(document.getElementById("trend-chart"), {
     scales: {
       y: {
         beginAtZero: false,
+        min: 0,
+        max: 1000,
         ticks: { font: { size: 11 } }
       },
       x: {
