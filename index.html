@@ -46,14 +46,13 @@ h1 { margin: 0 0 8px 0; font-size: 28px; color: #1F4E78; }
 .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 4px; position: relative; z-index: 1; }
 .stat-value { font-size: 24px; font-weight: 700; position: relative; z-index: 1; }
 .stat-detail { font-size: 11px; opacity: 0.85; margin-top: 6px; position: relative; z-index: 1; }
-.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-@media (max-width: 1200px) { .grid { grid-template-columns: 1fr; } }
 .card { 
   background: #ffffff; 
   border: 1px solid #e5e7eb; 
   border-radius: 10px; 
   padding: 20px; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  margin-bottom: 24px;
 }
 h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; padding-bottom: 8px; border-bottom: 2px solid #e5e7eb; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -74,22 +73,20 @@ tr:last-child td { border-bottom: none; }
 
 <div class="stats-grid" id="stats"></div>
 
-<div class="grid">
-  <div class="card">
-    <h2>Daily Scores</h2>
-    <table id="scores-table">
-      <thead><tr id="header"></tr></thead>
-      <tbody id="scores"></tbody>
-    </table>
-  </div>
-  
-  <div class="card">
-    <h2>Leaderboard</h2>
-    <table>
-      <thead><tr><th>Rank</th><th class="name">Name</th><th>Wins</th><th>Games</th><th>Win %</th><th>Avg Score</th><th>Avg Finish</th></tr></thead>
-      <tbody id="leaderboard"></tbody>
-    </table>
-  </div>
+<div class="card">
+  <h2>Leaderboard</h2>
+  <table>
+    <thead><tr><th>Rank</th><th class="name">Name</th><th>Wins</th><th>Games</th><th>Win %</th><th>Avg Score</th><th>Avg Finish</th></tr></thead>
+    <tbody id="leaderboard"></tbody>
+  </table>
+</div>
+
+<div class="card">
+  <h2>Daily Scores</h2>
+  <table id="scores-table">
+    <thead><tr id="header"></tr></thead>
+    <tbody id="scores"></tbody>
+  </table>
 </div>
 
 <div class="card">
@@ -151,6 +148,21 @@ const statsHtml = [
 `).join("");
 document.getElementById("stats").innerHTML = statsHtml;
 
+// Build leaderboard
+const leaderboardBody = document.getElementById("leaderboard");
+const lbRows = DATA.leaderboard.map((entry, idx) => `
+  <tr>
+    <td>${idx + 1}</td>
+    <td class="name">${entry.name}</td>
+    <td>${entry.wins}</td>
+    <td>${entry.games}</td>
+    <td>${entry.win_pct}%</td>
+    <td>${entry.avg_score}</td>
+    <td>${fmtFinish(entry.avg_finish)}</td>
+  </tr>
+`);
+leaderboardBody.innerHTML = lbRows.join("");
+
 // Build scores table
 const headerRow = document.getElementById("header");
 const headerCells = ["<th style='text-align: left;'>Date</th>"];
@@ -173,21 +185,6 @@ const rows = DATA.dates.map(d => {
   return `<tr>${cells.join("")}</tr>`;
 });
 scoresBody.innerHTML = rows.join("");
-
-// Build leaderboard
-const leaderboardBody = document.getElementById("leaderboard");
-const lbRows = DATA.leaderboard.map((entry, idx) => `
-  <tr>
-    <td>${idx + 1}</td>
-    <td class="name">${entry.name}</td>
-    <td>${entry.wins}</td>
-    <td>${entry.games}</td>
-    <td>${entry.win_pct}%</td>
-    <td>${entry.avg_score}</td>
-    <td>${fmtFinish(entry.avg_finish)}</td>
-  </tr>
-`);
-leaderboardBody.innerHTML = lbRows.join("");
 
 // Score trend chart
 const allDates = DATA.dates;
