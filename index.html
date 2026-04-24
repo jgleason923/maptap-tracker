@@ -17,8 +17,13 @@ body {
 }
 h1 { margin: 0 0 8px 0; font-size: 28px; color: #1F4E78; }
 .sub { color: #6b7280; font-size: 13px; margin-bottom: 24px; }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+@media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+.stat { background: linear-gradient(135deg, #1F4E78 0%, #2563eb 100%); color: white; border-radius: 10px; padding: 16px; }
+.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 4px; }
+.stat-value { font-size: 24px; font-weight: 700; }
 .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
-@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+@media (max-width: 1200px) { .grid { grid-template-columns: 1fr; } }
 .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 20px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
 h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -30,11 +35,14 @@ tr:last-child td { border-bottom: none; }
 .winner { background: #fef3c7; font-weight: 600; }
 .name { text-align: left; }
 .footer { font-size: 11px; color: #9ca3af; margin-top: 24px; text-align: center; }
+.chart-container { position: relative; height: 300px; margin-top: 16px; }
 </style>
 </head>
 <body>
 <h1>MapTap Tracker — Suspects</h1>
 <div class="sub" id="subtitle"></div>
+
+<div class="stats-grid" id="stats"></div>
 
 <div class="grid">
   <div class="card">
@@ -54,10 +62,33 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+<div class="card">
+  <h2>Score Trend</h2>
+  <div class="chart-container">
+    <canvas id="trend-chart"></canvas>
+  </div>
+</div>
+
 <div class="footer">Data from MapTap_Tracker.xlsx. Updated from Suspects group chat. <a href="https://github.com/jgleason923/maptap-tracker" style="color: #6b7280;">GitHub</a></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script>
-const DATA = {"players": ["James", "Joey", "Greg", "Brendan", "Connor", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24"], "scores": {"2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827}}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Mark"}, "leaderboard": [{"name": "Connor", "wins": 2, "games": 4, "win_pct": 50}, {"name": "James", "wins": 2, "games": 3, "win_pct": 67}, {"name": "Mark", "wins": 1, "games": 2, "win_pct": 50}, {"name": "Brendan", "wins": 0, "games": 4, "win_pct": 0}, {"name": "Greg", "wins": 0, "games": 5, "win_pct": 0}, {"name": "Joey", "wins": 0, "games": 4, "win_pct": 0}]};
+const DATA = {"players": ["James", "Joey", "Greg", "Brendan", "Connor", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24"], "scores": {"2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827}}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Mark"}, "leaderboard": [{"name": "James", "wins": 2, "games": 3, "win_pct": 67}, {"name": "Connor", "wins": 2, "games": 4, "win_pct": 50}, {"name": "Mark", "wins": 1, "games": 2, "win_pct": 50}, {"name": "Brendan", "wins": 0, "games": 4, "win_pct": 0}, {"name": "Greg", "wins": 0, "games": 5, "win_pct": 0}, {"name": "Joey", "wins": 0, "games": 4, "win_pct": 0}], "stats": {"most_wins_players": "James, Connor", "games_played": 22, "highest": 937, "lowest": 716}};
+const COLORS = { James:"#2563eb", Joey:"#dc2626", Greg:"#16a34a", Brendan:"#9333ea", Connor:"#ea580c", Mark:"#0891b2" };
+
+// Stats ribbon
+const statsHtml = [
+  { label: "Most Wins", value: DATA.stats.most_wins_players },
+  { label: "Games Played", value: DATA.stats.games_played },
+  { label: "Highest Score", value: DATA.stats.highest },
+  { label: "Lowest Score", value: DATA.stats.lowest },
+].map(s => `
+  <div class="stat">
+    <div class="stat-label">${s.label}</div>
+    <div class="stat-value">${s.value}</div>
+  </div>
+`).join("");
+document.getElementById("stats").innerHTML = statsHtml;
 
 // Build scores table
 const headerRow = document.getElementById("header");
@@ -94,6 +125,51 @@ const lbRows = DATA.leaderboard.map((entry, idx) => `
   </tr>
 `);
 leaderboardBody.innerHTML = lbRows.join("");
+
+// Score trend chart
+const allDates = DATA.dates;
+const datasets = DATA.players.map(p => ({
+  label: p,
+  data: allDates.map(d => {
+    const dayScores = DATA.scores[d] || {};
+    return dayScores[p] || null;
+  }),
+  borderColor: COLORS[p],
+  backgroundColor: COLORS[p] + "20",
+  spanGaps: true,
+  tension: 0.3,
+  pointRadius: 5,
+  pointBackgroundColor: COLORS[p],
+  borderWidth: 2,
+}));
+
+new Chart(document.getElementById("trend-chart"), {
+  type: "line",
+  data: {
+    labels: allDates.map(d => new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"})),
+    datasets: datasets
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { intersect: false, mode: "index" },
+    plugins: {
+      legend: {
+        position: "bottom",
+        labels: { boxWidth: 12, font: { size: 12 }, padding: 16 }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: false,
+        ticks: { font: { size: 11 } }
+      },
+      x: {
+        ticks: { font: { size: 11 } }
+      }
+    },
+  },
+});
 
 document.getElementById("subtitle").textContent = `${DATA.dates.length} days · Last updated ${new Date().toLocaleDateString("en-US", {month: "short", day: "numeric"})}`;
 </script>
