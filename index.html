@@ -47,21 +47,21 @@ h1 { margin: 0 0 8px 0; font-size: 28px; color: #60a5fa; }
 .stat-value { font-size: 24px; font-weight: 700; position: relative; z-index: 1; }
 .stat-detail { font-size: 11px; opacity: 0.85; margin-top: 6px; position: relative; z-index: 1; }
 .card { 
-  background: #1a2332; 
-  border: 1px solid #374151; 
+  background: #e8eef5; 
+  border: 1px solid #d1d5db; 
   border-radius: 10px; 
   padding: 20px; 
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   margin-bottom: 24px;
 }
-h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #60a5fa; padding-bottom: 8px; border-bottom: 2px solid #374151; }
+h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; padding-bottom: 8px; border-bottom: 2px solid #d1d5db; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: center; padding: 12px; background: #0f1929; font-weight: 600; color: #93c5fd; border-bottom: 2px solid #374151; }
-td { padding: 10px; border-bottom: 1px solid #2d3748; text-align: center; }
+th { text-align: center; padding: 12px; background: #d1d5db; font-weight: 600; color: #1F4E78; border-bottom: 2px solid #bcc2cf; }
+td { padding: 10px; border-bottom: 1px solid #d1d5db; text-align: center; color: #1F4E78; }
 td:first-child { text-align: left; }
 tr:last-child td { border-bottom: none; }
-.date { font-weight: 600; color: #60a5fa; }
-.winner { background: rgba(251, 191, 36, 0.2); font-weight: 600; border-radius: 4px; color: #fbbf24; }
+.date { font-weight: 600; color: #1F4E78; }
+.winner { background: #fef3c7; font-weight: 600; border-radius: 4px; color: #78350f; }
 .name { text-align: left; }
 .footer { font-size: 11px; color: #6b7280; margin-top: 24px; text-align: center; }
 .chart-container { position: relative; height: 300px; margin-top: 16px; }
@@ -216,7 +216,7 @@ new Chart(document.getElementById("trend-chart"), {
     plugins: {
       legend: {
         position: "bottom",
-        labels: { boxWidth: 12, font: { size: 12 }, padding: 16, color: "#9ca3af" }
+        labels: { boxWidth: 12, font: { size: 12 }, padding: 16, color: "#1F4E78" }
       }
     },
     scales: {
@@ -224,12 +224,12 @@ new Chart(document.getElementById("trend-chart"), {
         beginAtZero: false,
         min: DATA.stats.y_min,
         max: 1000,
-        grid: { color: "#374151" },
-        ticks: { font: { size: 11 }, color: "#9ca3af" }
+        grid: { color: "#d1d5db" },
+        ticks: { font: { size: 11 }, color: "#1F4E78" }
       },
       x: {
-        grid: { color: "#374151" },
-        ticks: { font: { size: 11 }, color: "#9ca3af" }
+        grid: { color: "#d1d5db" },
+        ticks: { font: { size: 11 }, color: "#1F4E78" }
       }
     },
   },
