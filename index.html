@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>MapTap Tracker — Suspects</title>
+<style>
+:root { color-scheme: light; }
+* { box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; margin: 0; padding: 20px; background: transparent; color: #1a1a1a; }
+h1 { margin: 0 0 4px 0; font-size: 22px; color: #1F4E78; }
+.sub { color: #6b7280; font-size: 13px; margin-bottom: 20px; }
+.grid { display: grid; gap: 18px; }
+.card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+h2 { margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { text-align: left; padding: 8px 10px; background: #f3f4f6; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; }
+td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; }
+tr:last-child td { border-bottom: none; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.player { font-weight: 600; }
+.crown { color: #d4a017; }
+.hilite { background: #fff7e6; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.stat { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; }
+.stat-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.stat-value { font-size: 20px; font-weight: 700; color: #1F4E78; margin-top: 2px; }
+.stat-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
+canvas { max-height: 320px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.footer { font-size: 11px; color: #9ca3af; margin-top: 20px; text-align: center; }
+.diamond { color: #059669; font-weight: 700; }
+.note { color: #9ca3af; font-style: italic; font-size: 11px; }
+</style>
+</head>
+<body>
+<h1>MapTap Tracker — Suspects</h1>
+<div class="sub" id="subtitle"></div>
+<div class="grid">
+  <div class="card"><h2>All-Time Records</h2><div class="stat-grid" id="records"></div></div>
+  <div class="card"><h2>Leaderboard</h2><table><thead><tr><th>Player</th><th class="num">Games</th><th class="num">All-Time High</th><th class="num">Average</th><th class="num">Last Score</th><th class="num">Daily Wins</th></tr></thead><tbody id="leaderboard"></tbody></table></div>
+  <div class="card"><h2>Score Trend</h2><canvas id="trend"></canvas></div>
+  <div class="card"><h2>Daily Results</h2><table><thead><tr><th>Date</th><th>Winner</th><th class="num">Winning Score</th><th class="num">Players</th><th class="num">Avg</th><th class="num">Spread</th></tr></thead><tbody id="daily"></tbody></table></div>
+  <div class="card"><h2>All Scores</h2><table><thead><tr><th>Date</th><th>Player</th><th class="num">R1</th><th class="num">R2</th><th class="num">R3</th><th class="num">R4</th><th class="num">R5</th><th class="num">Final</th></tr></thead><tbody id="all-scores"></tbody></table></div>
+</div>
+<div class="footer">Data lives in MapTap_Tracker.xlsx. Updated from Suspects group chat. <a href="https://github.com/jgleason923/maptap-tracker" style="color: #6b7280;">GitHub repo</a></div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<script>
+const scores = [{"date": "2026-04-19", "player": "Joey", "r": [98, 99, 73, 74, 80], "final": 805, "note": ""}, {"date": "2026-04-19", "player": "Brendan", "r": [99, 98, 72, 98, 86], "final": 893, "note": ""}, {"date": "2026-04-19", "player": "Mark", "r": [95, 99, 51, 68, 72], "final": 716, "note": ""}, {"date": "2026-04-19", "player": "Greg", "r": [99, 98, 92, 71, 86], "final": 852, "note": ""}, {"date": "2026-04-19", "player": "Connor", "r": [98, 96, 93, 96, 85], "final": 923, "note": ""}, {"date": "2026-04-20", "player": "Connor", "r": [91, 85, 89, 83, 81], "final": 846, "note": ""}, {"date": "2026-04-20", "player": "Joey", "r": [98, 96, 75, 75, 87], "final": 830, "note": ""}, {"date": "2026-04-20", "player": "Greg", "r": [89, 89, 79, 77, 88], "final": 831, "note": ""}, {"date": "2026-04-22", "player": "Greg", "r": [80, 91, 100, 94, 46], "final": 791, "note": ""}, {"date": "2026-04-22", "player": "James", "r": [84, 85, 100, 90, 82], "final": 885, "note": ""}, {"date": "2026-04-22", "player": "Brendan", "r": [85, 94, 100, 94, 70], "final": 871, "note": ""}, {"date": "2026-04-22", "player": "Joey", "r": [93, 85, 82, 68, 67], "final": 747, "note": ""}, {"date": "2026-04-22", "player": "Connor", "r": [69, 95, 100, 83, 82], "final": 859, "note": ""}, {"date": "2026-04-23", "player": "James", "r": [94, 93, 96, 90, 95], "final": 934, "note": ""}, {"date": "2026-04-23", "player": "Connor", "r": [91, 86, 95, 76, 56], "final": 763, "note": "Self-described SHAMEFUL"}, {"date": "2026-04-23", "player": "Brendan", "r": [93, 89, 83, 88, 88], "final": 876, "note": ""}, {"date": "2026-04-23", "player": "Greg", "r": [91, 92, 93, 91, 93], "final": 921, "note": ""}, {"date": "2026-04-23", "player": "Joey", "r": [93, 96, 89, 91, 84], "final": 892, "note": ""}, {"date": "2026-04-24", "player": "James", "r": [100, 95, 88, 93, 54], "final": 812, "note": "Folded under pressure"}, {"date": "2026-04-24", "player": "Mark", "r": [91, 99, 96, 96, 89], "final": 937, "note": ""}, {"date": "2026-04-24", "player": "Brendan", "r": [98, 96, 90, 97, 64], "final": 857, "note": ""}, {"date": "2026-04-24", "player": "Greg", "r": [94, 94, 99, 82, 65], "final": 827, "note": ""}];
+const LAST_UPDATED = "April 24, 2026";
+const PLAYERS = ["James","Joey","Greg","Brendan","Connor","Mark"];
+const COLORS = { James:"#2563eb", Joey:"#dc2626", Greg:"#16a34a", Brendan:"#9333ea", Connor:"#ea580c", Mark:"#0891b2" };
+
+const uniqueDays = [...new Set(scores.map(s => s.date))];
+document.getElementById("subtitle").textContent = `Last updated ${LAST_UPDATED} · ${scores.length} games across ${uniqueDays.length} day${uniqueDays.length===1?"":"s"}`;
+
+const byDate = {};
+scores.forEach(s => { (byDate[s.date] = byDate[s.date] || []).push(s); });
+Object.keys(byDate).forEach(d => {
+  byDate[d].sort((a,b) => b.final - a.final);
+  byDate[d][0].won = true;
+});
+
+const stats = PLAYERS.map(p => {
+  const mine = scores.filter(s => s.player === p);
+  const high = mine.length ? Math.max(...mine.map(s => s.final)) : null;
+  const avg = mine.length ? Math.round(mine.reduce((a,s)=>a+s.final,0)/mine.length) : null;
+  const last = mine.length ? mine[mine.length-1].final : null;
+  const wins = mine.filter(s => s.won).length;
+  return { player: p, games: mine.length, high, avg, last, wins };
+}).sort((a,b) => (b.high ?? -1) - (a.high ?? -1));
+
+const allHighEntry = stats.filter(s => s.high !== null).sort((a,b) => b.high - a.high)[0] || {player: "—", high: "—"};
+const allHighRow = scores.filter(s => s.player === allHighEntry.player && s.final === allHighEntry.high)[0];
+const mostWins = stats.slice().sort((a,b) => b.wins - a.wins)[0];
+const highAvg = stats.filter(s => s.avg !== null).slice().sort((a,b) => b.avg - a.avg)[0] || {player:"—", avg:"—", games:0};
+
+function fmtDate(iso) {
+  const dt = new Date(iso+"T12:00:00");
+  return dt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}
+function fmtShort(iso) {
+  const dt = new Date(iso+"T12:00:00");
+  return dt.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
+document.getElementById("records").innerHTML = `
+  <div class="stat"><div class="stat-label">Highest Score</div><div class="stat-value">${allHighEntry.high}</div><div class="stat-sub">${allHighEntry.player}${allHighRow?` · ${fmtShort(allHighRow.date)}`:""}</div></div>
+  <div class="stat"><div class="stat-label">Most Daily Wins</div><div class="stat-value">${mostWins.player}</div><div class="stat-sub">${mostWins.wins} win${mostWins.wins===1?"":"s"}</div></div>
+  <div class="stat"><div class="stat-label">Highest Average</div><div class="stat-value">${highAvg.avg}</div><div class="stat-sub">${highAvg.player} · ${highAvg.games} game${highAvg.games===1?"":"s"}</div></div>
+  <div class="stat"><div class="stat-label">Games Logged</div><div class="stat-value">${scores.length}</div><div class="stat-sub">${uniqueDays.length} day${uniqueDays.length===1?"":"s"} played</div></div>
+`;
+
+document.getElementById("leaderboard").innerHTML = stats.map(s => `
+  <tr${s.wins > 0 ? ' class="hilite"' : ''}>
+    <td class="player"><span class="dot" style="background:${COLORS[s.player]}"></span>${s.player}${s.wins>0 ? ' <span class="crown">♚</span>' : ''}</td>
+    <td class="num">${s.games}</td>
+    <td class="num diamond">${s.high ?? "—"}</td>
+    <td class="num">${s.avg ?? "—"}</td>
+    <td class="num">${s.last ?? "—"}</td>
+    <td class="num">${s.wins}</td>
+  </tr>`).join("");
+
+const days = Object.keys(byDate).sort().reverse();
+document.getElementById("daily").innerHTML = days.map(d => {
+  const arr = byDate[d];
+  const w = arr[0];
+  const avg = Math.round(arr.reduce((a,s)=>a+s.final,0) / arr.length);
+  const spread = arr[0].final - arr[arr.length-1].final;
+  return `<tr><td>${fmtDate(d)}</td><td class="player"><span class="dot" style="background:${COLORS[w.player]}"></span>${w.player} <span class="crown">♚</span></td><td class="num diamond">${w.final}</td><td class="num">${arr.length}</td><td class="num">${avg}</td><td class="num">${spread}</td></tr>`;
+}).join("");
+
+document.getElementById("all-scores").innerHTML = scores.slice().reverse().map(s => `
+  <tr${s.won ? ' class="hilite"' : ''}>
+    <td>${fmtShort(s.date)}</td>
+    <td class="player"><span class="dot" style="background:${COLORS[s.player]}"></span>${s.player}${s.won ? ' <span class="crown">♚</span>' : ''}${s.note ? ' <span class="note">' + s.note + '</span>' : ''}</td>
+    <td class="num">${s.r[0]}</td><td class="num">${s.r[1]}</td><td class="num">${s.r[2]}</td><td class="num">${s.r[3]}</td><td class="num">${s.r[4]}</td>
+    <td class="num diamond">${s.final}</td>
+  </tr>`).join("");
+
+const allDates = [...new Set(scores.map(s=>s.date))].sort();
+const datasets = PLAYERS.map(p => ({
+  label: p,
+  data: allDates.map(d => {
+    const row = scores.find(s => s.date === d && s.player === p);
+    return row ? row.final : null;
+  }),
+  borderColor: COLORS[p], backgroundColor: COLORS[p],
+  spanGaps: true, tension: 0.3, pointRadius: 4, borderWidth: 2,
+}));
+
+new Chart(document.getElementById("trend"), {
+  type: "line",
+  data: { labels: allDates.map(fmtShort), datasets: datasets },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    interaction: { intersect: false, mode: "index" },
+    plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 12 } } } },
+    scales: { y: { beginAtZero: false, ticks: { font: { size: 11 } } }, x: { ticks: { font: { size: 11 } } } },
+  },
+});
+</script>
+</body>
+</html>
