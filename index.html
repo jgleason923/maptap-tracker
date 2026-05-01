@@ -4,242 +4,140 @@
 <meta charset="utf-8">
 <title>MapTap Tracker — Suspects</title>
 <style>
-:root { color-scheme: dark; }
+:root { color-scheme: light; }
 * { box-sizing: border-box; }
-body { 
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; 
-  margin: 0; 
-  padding: 20px; 
-  background: #0f1929;
-  color: #e5e7eb; 
-  max-width: 1200px;
-  margin: 0 auto;
-  min-height: 100vh;
-}
-h1 { margin: 0 0 8px 0; font-size: 28px; color: #60a5fa; }
-.sub { color: #9ca3af; font-size: 13px; margin-bottom: 24px; }
-.stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-bottom: 24px; }
-@media (max-width: 900px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
-.stat { 
-  background: linear-gradient(135deg, #1F4E78 0%, #2563eb 100%); 
-  color: white; 
-  border-radius: 10px; 
-  padding: 16px; 
-  box-shadow: 0 4px 12px rgba(31, 78, 120, 0.3);
-  position: relative;
-  overflow: hidden;
-}
-.stat::before {
-  content: '';
-  position: absolute;
-  top: -50%;
-  right: -50%;
-  width: 200px;
-  height: 200px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-}
-.stat.highest { background: linear-gradient(135deg, #059669 0%, #10b981 100%); box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3); }
-.stat.lowest { background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%); box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3); }
-.stat.wins { background: linear-gradient(135deg, #9333ea 0%, #a855f7 100%); box-shadow: 0 4px 12px rgba(147, 51, 234, 0.3); }
-.stat.avg { background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
-.stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.9; margin-bottom: 4px; position: relative; z-index: 1; }
-.stat-value { font-size: 24px; font-weight: 700; position: relative; z-index: 1; }
-.stat-detail { font-size: 11px; opacity: 0.85; margin-top: 6px; position: relative; z-index: 1; }
-.card { 
-  background: #e8eef5; 
-  border: 1px solid #d1d5db; 
-  border-radius: 10px; 
-  padding: 20px; 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  margin-bottom: 24px;
-}
-h2 { margin: 0 0 16px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; padding-bottom: 8px; border-bottom: 2px solid #d1d5db; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif; margin: 0; padding: 20px; background: transparent; color: #1a1a1a; }
+h1 { margin: 0 0 4px 0; font-size: 22px; color: #1F4E78; }
+.sub { color: #6b7280; font-size: 13px; margin-bottom: 20px; }
+.grid { display: grid; gap: 18px; }
+.card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 16px 18px; box-shadow: 0 1px 2px rgba(0,0,0,0.04); }
+h2 { margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #1F4E78; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
-th { text-align: center; padding: 12px; background: #d1d5db; font-weight: 600; color: #1F4E78; border-bottom: 2px solid #bcc2cf; }
-td { padding: 10px; border-bottom: 1px solid #d1d5db; text-align: center; color: #1F4E78; }
-td:first-child { text-align: left; }
+th { text-align: left; padding: 8px 10px; background: #f3f4f6; font-weight: 600; color: #374151; border-bottom: 1px solid #e5e7eb; }
+td { padding: 8px 10px; border-bottom: 1px solid #f3f4f6; }
 tr:last-child td { border-bottom: none; }
-.date { font-weight: 600; color: #1F4E78; }
-.winner { background: #fef3c7; font-weight: 600; border-radius: 4px; color: #78350f; }
-.avg-score { font-weight: 600; color: #1F4E78; }
-.name { text-align: left; }
-.footer { font-size: 11px; color: #6b7280; margin-top: 24px; text-align: center; }
-.chart-container { position: relative; height: 300px; margin-top: 16px; }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+.player { font-weight: 600; }
+.crown { color: #d4a017; }
+.hilite { background: #fff7e6; }
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.stat { background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 12px; }
+.stat-label { font-size: 11px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.4px; }
+.stat-value { font-size: 20px; font-weight: 700; color: #1F4E78; margin-top: 2px; }
+.stat-sub { font-size: 11px; color: #6b7280; margin-top: 2px; }
+canvas { max-height: 320px; }
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
+.footer { font-size: 11px; color: #9ca3af; margin-top: 20px; text-align: center; }
+.diamond { color: #059669; font-weight: 700; }
+.note { color: #9ca3af; font-style: italic; font-size: 11px; }
 </style>
 </head>
 <body>
 <h1>MapTap Tracker — Suspects</h1>
 <div class="sub" id="subtitle"></div>
-
-<div class="stats-grid" id="stats"></div>
-
-<div class="card">
-  <h2>Leaderboard</h2>
-  <table>
-    <thead><tr><th>Rank</th><th class="name">Name</th><th>Wins</th><th>Games</th><th>Win %</th><th>Avg Score</th><th>Avg Finish</th></tr></thead>
-    <tbody id="leaderboard"></tbody>
-  </table>
+<div class="grid">
+  <div class="card"><h2>All-Time Records</h2><div class="stat-grid" id="records"></div></div>
+  <div class="card"><h2>Leaderboard</h2><table><thead><tr><th>Player</th><th class="num">Games</th><th class="num">All-Time High</th><th class="num">Average</th><th class="num">Last Score</th><th class="num">Daily Wins</th></tr></thead><tbody id="leaderboard"></tbody></table></div>
+  <div class="card"><h2>Score Trend</h2><canvas id="trend"></canvas></div>
+  <div class="card"><h2>Daily Results</h2><table><thead><tr><th>Date</th><th>Winner</th><th class="num">Winning Score</th><th class="num">Players</th><th class="num">Avg</th><th class="num">Spread</th></tr></thead><tbody id="daily"></tbody></table></div>
+  <div class="card"><h2>All Scores</h2><table><thead><tr><th>Date</th><th>Player</th><th class="num">R1</th><th class="num">R2</th><th class="num">R3</th><th class="num">R4</th><th class="num">R5</th><th class="num">Final</th></tr></thead><tbody id="all-scores"></tbody></table></div>
 </div>
-
-<div class="card">
-  <h2>Daily Scores</h2>
-  <table id="scores-table">
-    <thead><tr id="header"></tr></thead>
-    <tbody id="scores"></tbody>
-  </table>
-</div>
-
-<div class="card">
-  <h2>Score Trend</h2>
-  <div class="chart-container">
-    <canvas id="trend-chart"></canvas>
-  </div>
-</div>
-
-<div class="footer">Data from MapTap_Tracker.xlsx. Updated from Suspects group chat. <a href="https://github.com/jgleason923/maptap-tracker" style="color: #6b7280;">GitHub</a></div>
-
+<div class="footer">Data lives in MapTap_Tracker.xlsx in your MapTap folder. Send Claude new screenshots to refresh.</div>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script>
-const DATA = {"players": ["Brendan", "Connor", "Greg", "James", "Joey", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26"], "scores": {"2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827, "Connor": 960, "Joey": 939}, "2026-04-25": {"Greg": 720, "Brendan": 731, "Connor": 584, "Mark": 623, "James": 745, "Joey": 591}, "2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-26": {"Joey": 890, "Mark": 836, "James": 773, "Brendan": 832, "Greg": 795, "Connor": 591}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}}, "daily_avgs": {"2026-04-19": 837, "2026-04-20": 835, "2026-04-22": 830, "2026-04-23": 877, "2026-04-24": 888, "2026-04-25": 665, "2026-04-26": 786}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Connor", "2026-04-25": "James", "2026-04-26": "Joey"}, "leaderboard": [{"name": "James", "wins": 3, "games": 5, "win_pct": 60, "avg_score": 829, "avg_finish": 0}, {"name": "Connor", "wins": 3, "games": 7, "win_pct": 42, "avg_score": 789, "avg_finish": 0}, {"name": "Joey", "wins": 1, "games": 7, "win_pct": 14, "avg_score": 813, "avg_finish": 0}, {"name": "Brendan", "wins": 0, "games": 6, "win_pct": 0, "avg_score": 843, "avg_finish": 0}, {"name": "Greg", "wins": 0, "games": 7, "win_pct": 0, "avg_score": 819, "avg_finish": 0}, {"name": "Mark", "wins": 0, "games": 4, "win_pct": 0, "avg_score": 778, "avg_finish": 0}], "stats": {"most_wins_players": "James, Connor", "most_wins_count": 3, "games_played": 36, "avg_overall": 813, "highest": 960, "highest_detail": "Connor, 04/24", "lowest": 584, "lowest_detail": "Connor, 04/25", "y_min": 550}};
+const scores = [{"date": "2026-04-19", "player": "Joey", "r": [98, 99, 73, 74, 80], "final": 805, "note": ""}, {"date": "2026-04-19", "player": "Brendan", "r": [99, 98, 72, 98, 86], "final": 893, "note": ""}, {"date": "2026-04-19", "player": "Mark", "r": [95, 99, 51, 68, 72], "final": 716, "note": ""}, {"date": "2026-04-19", "player": "Greg", "r": [99, 98, 92, 71, 86], "final": 852, "note": ""}, {"date": "2026-04-19", "player": "Connor", "r": [98, 96, 93, 96, 85], "final": 923, "note": ""}, {"date": "2026-04-20", "player": "Connor", "r": [91, 85, 89, 83, 81], "final": 846, "note": ""}, {"date": "2026-04-20", "player": "Joey", "r": [98, 96, 75, 75, 87], "final": 830, "note": ""}, {"date": "2026-04-20", "player": "Greg", "r": [89, 89, 79, 77, 88], "final": 831, "note": ""}, {"date": "2026-04-22", "player": "Greg", "r": [80, 91, 100, 94, 46], "final": 791, "note": ""}, {"date": "2026-04-22", "player": "James", "r": [84, 85, 100, 90, 82], "final": 885, "note": ""}, {"date": "2026-04-22", "player": "Brendan", "r": [85, 94, 100, 94, 70], "final": 871, "note": ""}, {"date": "2026-04-22", "player": "Joey", "r": [93, 85, 82, 68, 67], "final": 747, "note": ""}, {"date": "2026-04-22", "player": "Connor", "r": [69, 95, 100, 83, 82], "final": 859, "note": ""}, {"date": "2026-04-23", "player": "James", "r": [94, 93, 96, 90, 95], "final": 934, "note": ""}, {"date": "2026-04-23", "player": "Connor", "r": [91, 86, 95, 76, 56], "final": 763, "note": "Self-described SHAMEFUL"}, {"date": "2026-04-23", "player": "Brendan", "r": [93, 89, 83, 88, 88], "final": 876, "note": ""}, {"date": "2026-04-23", "player": "Greg", "r": [91, 92, 93, 91, 93], "final": 921, "note": ""}, {"date": "2026-04-23", "player": "Joey", "r": [93, 96, 89, 91, 84], "final": 892, "note": ""}, {"date": "2026-04-24", "player": "James", "r": [100, 95, 88, 93, 54], "final": 812, "note": "Folded under pressure"}, {"date": "2026-04-24", "player": "Mark", "r": [91, 99, 96, 96, 89], "final": 937, "note": ""}, {"date": "2026-04-24", "player": "Brendan", "r": [98, 96, 90, 97, 64], "final": 857, "note": ""}, {"date": "2026-04-24", "player": "Greg", "r": [94, 94, 99, 82, 65], "final": 827, "note": ""}, {"date": "2026-04-24", "player": "Connor", "r": [93, 99, 96, 97, 95], "final": 960, "note": "Bend the knee"}, {"date": "2026-04-24", "player": "Joey", "r": [97, 98, 96, 95, 89], "final": 939, "note": "I'll never do better than this"}, {"date": "2026-04-25", "player": "Greg", "r": [97, 99, 97, 72, 38], "final": 720, "note": "Brutal finish"}, {"date": "2026-04-25", "player": "Brendan", "r": [95, 100, 94, 65, 51], "final": 731, "note": ""}, {"date": "2026-04-25", "player": "Connor", "r": [98, 96, 9, 69, 55], "final": 584, "note": "I'm embarrassed"}, {"date": "2026-04-25", "player": "Mark", "r": [95, 93, 45, 59, 56], "final": 623, "note": ""}, {"date": "2026-04-25", "player": "James", "r": [95, 99, 100, 74, 43], "final": 745, "note": ""}, {"date": "2026-04-25", "player": "Joey", "r": [94, 93, 97, 70, 0], "final": 591, "note": "Wrong pole"}, {"date": "2026-04-26", "player": "Joey", "r": [95, 79, 85, 89, 93], "final": 890, "note": ""}, {"date": "2026-04-26", "player": "Mark", "r": [92, 95, 74, 70, 97], "final": 836, "note": ""}, {"date": "2026-04-26", "player": "James", "r": [91, 78, 89, 85, 57], "final": 773, "note": ""}, {"date": "2026-04-26", "player": "Brendan", "r": [95, 85, 77, 96, 70], "final": 832, "note": ""}, {"date": "2026-04-26", "player": "Greg", "r": [85, 86, 87, 72, 78], "final": 795, "note": ""}, {"date": "2026-04-26", "player": "Connor", "r": [87, 75, 45, 80, 33], "final": 591, "note": ""}, {"date": "2026-04-27", "player": "Connor", "r": [96, 98, 67, 29, 80], "final": 655, "note": ""}, {"date": "2026-04-27", "player": "Mark", "r": [99, 67, 61, 87, 40], "final": 669, "note": ""}, {"date": "2026-04-27", "player": "James", "r": [95, 90, 82, 86, 41], "final": 730, "note": ""}, {"date": "2026-04-27", "player": "Brendan", "r": [94, 84, 85, 37, 68], "final": 663, "note": ""}, {"date": "2026-04-27", "player": "Greg", "r": [95, 85, 87, 62, 78], "final": 774, "note": ""}, {"date": "2026-04-27", "player": "Joey", "r": [97, 78, 72, 74, 71], "final": 754, "note": ""}, {"date": "2026-04-28", "player": "Brendan", "r": [97, 96, 84, 95, 58], "final": 820, "note": ""}, {"date": "2026-04-28", "player": "James", "r": [97, 95, 92, 90, 60], "final": 826, "note": ""}, {"date": "2026-04-28", "player": "Mark", "r": [95, 91, 77, 59, 40], "final": 637, "note": ""}, {"date": "2026-04-28", "player": "Greg", "r": [95, 91, 83, 72, 47], "final": 709, "note": ""}, {"date": "2026-04-28", "player": "Joey", "r": [97, 75, 84, 52, 59], "final": 673, "note": ""}, {"date": "2026-04-28", "player": "Connor", "r": [96, 94, 84, 91, 48], "final": 775, "note": ""}, {"date": "2026-04-29", "player": "Joey", "r": [92, 90, 85, 96, 84], "final": 892, "note": ""}, {"date": "2026-04-29", "player": "Brendan", "r": [97, 95, 95, 96, 81], "final": 913, "note": ""}, {"date": "2026-04-29", "player": "James", "r": [91, 95, 95, 94, 77], "final": 889, "note": ""}, {"date": "2026-04-29", "player": "Greg", "r": [93, 95, 94, 95, 75], "final": 886, "note": ""}, {"date": "2026-04-29", "player": "Connor", "r": [92, 98, 83, 96, 75], "final": 869, "note": ""}, {"date": "2026-04-29", "player": "Mark", "r": [96, 97, 93, 92, 88], "final": 919, "note": ""}, {"date": "2026-04-30", "player": "Greg", "r": [95, 98, 94, 97, 83], "final": 921, "note": ""}, {"date": "2026-04-30", "player": "Brendan", "r": [98, 99, 92, 99, 85], "final": 933, "note": ""}, {"date": "2026-04-30", "player": "Joey", "r": [99, 93, 97, 76, 91], "final": 887, "note": ""}, {"date": "2026-04-30", "player": "James", "r": [99, 95, 93, 98, 84], "final": 926, "note": ""}, {"date": "2026-04-30", "player": "Mark", "r": [86, 96, 92, 100, 38], "final": 780, "note": ""}, {"date": "2026-04-30", "player": "Connor", "r": [98, 93, 94, 98, 83], "final": 922, "note": ""}, {"date": "2026-05-01", "player": "James", "r": [87, 95, 87, 95, 61], "final": 824, "note": ""}, {"date": "2026-05-01", "player": "Brendan", "r": [94, 98, 90, 83, 53], "final": 780, "note": ""}, {"date": "2026-05-01", "player": "Greg", "r": [89, 93, 95, 78, 62], "final": 792, "note": ""}, {"date": "2026-05-01", "player": "Connor", "r": [93, 94, 93, 94, 52], "final": 811, "note": ""}, {"date": "2026-05-01", "player": "Mark", "r": [81, 96, 79, 55, 52], "final": 656, "note": ""}, {"date": "2026-05-01", "player": "Joey", "r": [95, 96, 95, 61, 47], "final": 705, "note": ""}];
+const LAST_UPDATED = "May 1, 2026";
+const PLAYERS = ["James","Joey","Greg","Brendan","Connor","Mark"];
 const COLORS = { James:"#2563eb", Joey:"#dc2626", Greg:"#16a34a", Brendan:"#9333ea", Connor:"#ea580c", Mark:"#0891b2" };
 
-function fmtFinish(n) {
-  if (n === 1) return "1st";
-  if (n === 2) return "2nd";
-  if (n === 3) return "3rd";
-  return Math.round(n) + "th";
+const uniqueDays = [...new Set(scores.map(s => s.date))];
+document.getElementById("subtitle").textContent = `Last updated ${LAST_UPDATED} · ${scores.length} games across ${uniqueDays.length} day${uniqueDays.length===1?"":"s"}`;
+
+const byDate = {};
+scores.forEach(s => { (byDate[s.date] = byDate[s.date] || []).push(s); });
+Object.keys(byDate).forEach(d => {
+  byDate[d].sort((a,b) => b.final - a.final);
+  byDate[d][0].won = true;
+});
+
+const stats = PLAYERS.map(p => {
+  const mine = scores.filter(s => s.player === p);
+  const high = mine.length ? Math.max(...mine.map(s => s.final)) : null;
+  const avg = mine.length ? Math.round(mine.reduce((a,s)=>a+s.final,0)/mine.length) : null;
+  const last = mine.length ? mine[mine.length-1].final : null;
+  const wins = mine.filter(s => s.won).length;
+  return { player: p, games: mine.length, high, avg, last, wins };
+}).sort((a,b) => (b.high ?? -1) - (a.high ?? -1));
+
+const allHighEntry = stats.filter(s => s.high !== null).sort((a,b) => b.high - a.high)[0] || {player: "—", high: "—"};
+const allHighRow = scores.filter(s => s.player === allHighEntry.player && s.final === allHighEntry.high)[0];
+const mostWins = stats.slice().sort((a,b) => b.wins - a.wins)[0];
+const highAvg = stats.filter(s => s.avg !== null).slice().sort((a,b) => b.avg - a.avg)[0] || {player:"—", avg:"—", games:0};
+
+function fmtDate(iso) {
+  const dt = new Date(iso+"T12:00:00");
+  return dt.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+}
+function fmtShort(iso) {
+  const dt = new Date(iso+"T12:00:00");
+  return dt.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-// Stats ribbon
-const statsHtml = [
-  { 
-    label: "Most Wins", 
-    value: DATA.stats.most_wins_players + " (" + DATA.stats.most_wins_count + ")",
-    className: "wins"
-  },
-  { 
-    label: "Scores Submitted", 
-    value: DATA.stats.games_played,
-    className: ""
-  },
-  { 
-    label: "Avg Score", 
-    value: DATA.stats.avg_overall,
-    className: "avg"
-  },
-  { 
-    label: "Highest Score", 
-    value: DATA.stats.highest,
-    detail: DATA.stats.highest_detail,
-    className: "highest"
-  },
-  { 
-    label: "Lowest Score", 
-    value: DATA.stats.lowest,
-    detail: DATA.stats.lowest_detail,
-    className: "lowest"
-  },
-].map(s => `
-  <div class="stat ${s.className}">
-    <div class="stat-label">${s.label}</div>
-    <div class="stat-value">${s.value}</div>
-    ${s.detail ? `<div class="stat-detail">${s.detail}</div>` : ''}
-  </div>
-`).join("");
-document.getElementById("stats").innerHTML = statsHtml;
+document.getElementById("records").innerHTML = `
+  <div class="stat"><div class="stat-label">Highest Score</div><div class="stat-value">${allHighEntry.high}</div><div class="stat-sub">${allHighEntry.player}${allHighRow?` · ${fmtShort(allHighRow.date)}`:""}</div></div>
+  <div class="stat"><div class="stat-label">Most Daily Wins</div><div class="stat-value">${mostWins.player}</div><div class="stat-sub">${mostWins.wins} win${mostWins.wins===1?"":"s"}</div></div>
+  <div class="stat"><div class="stat-label">Highest Average</div><div class="stat-value">${highAvg.avg}</div><div class="stat-sub">${highAvg.player} · ${highAvg.games} game${highAvg.games===1?"":"s"}</div></div>
+  <div class="stat"><div class="stat-label">Games Logged</div><div class="stat-value">${scores.length}</div><div class="stat-sub">${uniqueDays.length} day${uniqueDays.length===1?"":"s"} played</div></div>
+`;
 
-// Build leaderboard
-const leaderboardBody = document.getElementById("leaderboard");
-const lbRows = DATA.leaderboard.map((entry, idx) => `
-  <tr>
-    <td>${idx + 1}</td>
-    <td class="name">${entry.name}</td>
-    <td>${entry.wins}</td>
-    <td>${entry.games}</td>
-    <td>${entry.win_pct}%</td>
-    <td>${entry.avg_score}</td>
-    <td>${fmtFinish(entry.avg_finish)}</td>
-  </tr>
-`);
-leaderboardBody.innerHTML = lbRows.join("");
+document.getElementById("leaderboard").innerHTML = stats.map(s => `
+  <tr${s.wins > 0 ? ' class="hilite"' : ''}>
+    <td class="player"><span class="dot" style="background:${COLORS[s.player]}"></span>${s.player}${s.wins>0 ? ' <span class="crown">&#9819;</span>' : ''}</td>
+    <td class="num">${s.games}</td>
+    <td class="num diamond">${s.high ?? "—"}</td>
+    <td class="num">${s.avg ?? "—"}</td>
+    <td class="num">${s.last ?? "—"}</td>
+    <td class="num">${s.wins}</td>
+  </tr>`).join("");
 
-// Build scores table
-const headerRow = document.getElementById("header");
-const headerCells = ["<th style='text-align: left;'>Date</th>"];
-headerCells.push(...DATA.players.map(p => `<th>${p}</th>`));
-headerCells.push("<th>Avg Score</th>");
-headerCells.push("<th>Winner</th>");
-headerRow.innerHTML = headerCells.join("");
+const days = Object.keys(byDate).sort().reverse();
+document.getElementById("daily").innerHTML = days.map(d => {
+  const arr = byDate[d];
+  const w = arr[0];
+  const avg = Math.round(arr.reduce((a,s)=>a+s.final,0) / arr.length);
+  const spread = arr[0].final - arr[arr.length-1].final;
+  return `<tr><td>${fmtDate(d)}</td><td class="player"><span class="dot" style="background:${COLORS[w.player]}"></span>${w.player} <span class="crown">&#9819;</span></td><td class="num diamond">${w.final}</td><td class="num">${arr.length}</td><td class="num">${avg}</td><td class="num">${spread}</td></tr>`;
+}).join("");
 
-const scoresBody = document.getElementById("scores");
-const rows = DATA.dates.map(d => {
-  const dayScores = DATA.scores[d] || {};
-  const winner = DATA.winners[d] || "—";
-  const dayAvg = DATA.daily_avgs[d] || "—";
-  const cells = [];
-  cells.push(`<td class="date">${new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"})}</td>`);
-  for (let p of DATA.players) {
-    const score = dayScores[p];
-    const isWinner = p === winner ? " winner" : "";
-    cells.push(`<td class="${isWinner}">${score || "—"}</td>`);
-  }
-  cells.push(`<td class="avg-score">${dayAvg}</td>`);
-  cells.push(`<td class="winner">${winner}</td>`);
-  return `<tr>${cells.join("")}</tr>`;
-});
-scoresBody.innerHTML = rows.join("");
+document.getElementById("all-scores").innerHTML = scores.slice().reverse().map(s => `
+  <tr${s.won ? ' class="hilite"' : ''}>
+    <td>${fmtShort(s.date)}</td>
+    <td class="player"><span class="dot" style="background:${COLORS[s.player]}"></span>${s.player}${s.won ? ' <span class="crown">&#9819;</span>' : ''}${s.note ? ' <span class="note">' + s.note + '</span>' : ''}</td>
+    <td class="num">${s.r[0]}</td><td class="num">${s.r[1]}</td><td class="num">${s.r[2]}</td><td class="num">${s.r[3]}</td><td class="num">${s.r[4]}</td>
+    <td class="num diamond">${s.final}</td>
+  </tr>`).join("");
 
-// Score trend chart
-const allDates = DATA.dates;
-const datasets = DATA.players.map(p => ({
+const allDates = [...new Set(scores.map(s=>s.date))].sort();
+const datasets = PLAYERS.map(p => ({
   label: p,
   data: allDates.map(d => {
-    const dayScores = DATA.scores[d] || {};
-    return dayScores[p] || null;
+    const row = scores.find(s => s.date === d && s.player === p);
+    return row ? row.final : null;
   }),
-  borderColor: COLORS[p],
-  backgroundColor: COLORS[p] + "20",
-  spanGaps: true,
-  tension: 0.3,
-  pointRadius: 5,
-  pointBackgroundColor: COLORS[p],
-  borderWidth: 2,
+  borderColor: COLORS[p], backgroundColor: COLORS[p],
+  spanGaps: true, tension: 0.3, pointRadius: 4, borderWidth: 2,
 }));
 
-new Chart(document.getElementById("trend-chart"), {
+new Chart(document.getElementById("trend"), {
   type: "line",
-  data: {
-    labels: allDates.map(d => new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"})),
-    datasets: datasets
-  },
+  data: { labels: allDates.map(fmtShort), datasets: datasets },
   options: {
-    responsive: true,
-    maintainAspectRatio: false,
+    responsive: true, maintainAspectRatio: false,
     interaction: { intersect: false, mode: "index" },
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: { boxWidth: 12, font: { size: 12 }, padding: 16, color: "#1F4E78" }
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: false,
-        min: DATA.stats.y_min,
-        max: 1000,
-        grid: { color: "#d1d5db" },
-        ticks: { font: { size: 11 }, color: "#1F4E78" }
-      },
-      x: {
-        grid: { color: "#d1d5db" },
-        ticks: { font: { size: 11 }, color: "#1F4E78" }
-      }
-    },
+    plugins: { legend: { position: "bottom", labels: { boxWidth: 12, font: { size: 12 } } } },
+    scales: { y: { beginAtZero: false, ticks: { font: { size: 11 } } }, x: { ticks: { font: { size: 11 } } } },
   },
 });
-
-document.getElementById("subtitle").textContent = `${DATA.dates.length} days · Last updated ${new Date().toLocaleDateString("en-US", {month: "short", day: "numeric"})}`;
 </script>
 </body>
 </html>
