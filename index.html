@@ -97,11 +97,19 @@ tr:last-child td { border-bottom: none; }
   </div>
 </div>
 
+<div class="card">
+  <h2>Daily Finishes</h2>
+  <table id="finishes-table">
+    <thead><tr id="finishes-header"></tr></thead>
+    <tbody id="finishes"></tbody>
+  </table>
+</div>
+
 <div class="footer">Data from MapTap_Tracker.xlsx. Updated from Suspects group chat. <a href="https://github.com/jgleason923/maptap-tracker" style="color: #6b7280;">GitHub</a></div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <script>
-const DATA = {"players": ["Brendan", "Connor", "Greg", "James", "Joey", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01"], "scores": {"2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-05-01": {"James": 824, "Brendan": 780, "Greg": 792, "Connor": 811, "Mark": 656, "Joey": 705}, "2026-04-30": {"Greg": 921, "Brendan": 933, "Joey": 887, "James": 926, "Mark": 780, "Connor": 922}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}, "2026-04-27": {"Connor": 655, "Mark": 669, "James": 730, "Brendan": 663, "Greg": 774, "Joey": 754}, "2026-04-29": {"Joey": 892, "Brendan": 913, "James": 889, "Greg": 886, "Connor": 869, "Mark": 919}, "2026-04-26": {"Joey": 890, "Mark": 836, "James": 773, "Brendan": 832, "Greg": 795, "Connor": 591}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827, "Connor": 960, "Joey": 939}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-28": {"Brendan": 820, "James": 826, "Mark": 637, "Greg": 709, "Joey": 673, "Connor": 775}, "2026-04-25": {"Greg": 720, "Brendan": 731, "Connor": 584, "Mark": 623, "James": 745, "Joey": 591}}, "daily_avgs": {"2026-04-19": 837, "2026-04-20": 835, "2026-04-22": 830, "2026-04-23": 877, "2026-04-24": 888, "2026-04-25": 665, "2026-04-26": 786, "2026-04-27": 707, "2026-04-28": 740, "2026-04-29": 894, "2026-04-30": 894, "2026-05-01": 761}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Connor", "2026-04-25": "James", "2026-04-26": "Joey", "2026-04-27": "Greg", "2026-04-28": "James", "2026-04-29": "Mark", "2026-04-30": "Brendan", "2026-05-01": "James"}, "leaderboard": [{"name": "James", "wins": 5, "games": 10, "win_pct": 50, "avg_score": 834, "avg_finish": 0}, {"name": "Connor", "wins": 3, "games": 12, "win_pct": 25, "avg_score": 796, "avg_finish": 0}, {"name": "Mark", "wins": 1, "games": 9, "win_pct": 11, "avg_score": 752, "avg_finish": 0}, {"name": "Brendan", "wins": 1, "games": 11, "win_pct": 9, "avg_score": 833, "avg_finish": 0}, {"name": "Greg", "wins": 1, "games": 12, "win_pct": 8, "avg_score": 818, "avg_finish": 0}, {"name": "Joey", "wins": 1, "games": 12, "win_pct": 8, "avg_score": 800, "avg_finish": 0}], "stats": {"most_wins_players": "James", "most_wins_count": 5, "games_played": 66, "avg_overall": 807, "highest": 960, "highest_detail": "Connor, 04/24", "lowest": 584, "lowest_detail": "Connor, 04/25", "y_min": 550}};
+const DATA = {"players": ["Brendan", "Connor", "Greg", "James", "Joey", "Mark"], "dates": ["2026-04-19", "2026-04-20", "2026-04-22", "2026-04-23", "2026-04-24", "2026-04-25", "2026-04-26", "2026-04-27", "2026-04-28", "2026-04-29", "2026-04-30", "2026-05-01"], "scores": {"2026-04-25": {"Greg": 720, "Brendan": 731, "Connor": 584, "Mark": 623, "James": 745, "Joey": 591}, "2026-04-24": {"James": 812, "Mark": 937, "Brendan": 857, "Greg": 827, "Connor": 960, "Joey": 939}, "2026-04-23": {"James": 934, "Connor": 763, "Brendan": 876, "Greg": 921, "Joey": 892}, "2026-04-26": {"Joey": 890, "Mark": 836, "James": 773, "Brendan": 832, "Greg": 795, "Connor": 591}, "2026-04-27": {"Connor": 655, "Mark": 669, "James": 730, "Brendan": 663, "Greg": 774, "Joey": 754}, "2026-05-01": {"James": 824, "Brendan": 780, "Greg": 792, "Connor": 811, "Mark": 656, "Joey": 705}, "2026-04-20": {"Connor": 846, "Joey": 830, "Greg": 831}, "2026-04-19": {"Joey": 805, "Brendan": 893, "Mark": 716, "Greg": 852, "Connor": 923}, "2026-04-30": {"Greg": 921, "Brendan": 933, "Joey": 887, "James": 926, "Mark": 780, "Connor": 922}, "2026-04-29": {"Joey": 892, "Brendan": 913, "James": 889, "Greg": 886, "Connor": 869, "Mark": 919}, "2026-04-28": {"Brendan": 820, "James": 826, "Mark": 637, "Greg": 709, "Joey": 673, "Connor": 775}, "2026-04-22": {"Greg": 791, "James": 885, "Brendan": 871, "Joey": 747, "Connor": 859}}, "daily_avgs": {"2026-04-19": 837, "2026-04-20": 835, "2026-04-22": 830, "2026-04-23": 877, "2026-04-24": 888, "2026-04-25": 665, "2026-04-26": 786, "2026-04-27": 707, "2026-04-28": 740, "2026-04-29": 894, "2026-04-30": 894, "2026-05-01": 761}, "daily_finishes": {"2026-04-19": {"Connor": 1, "Brendan": 2, "Greg": 3, "Joey": 4, "Mark": 5}, "2026-04-20": {"Connor": 1, "Greg": 2, "Joey": 3}, "2026-04-22": {"James": 1, "Brendan": 2, "Connor": 3, "Greg": 4, "Joey": 5}, "2026-04-23": {"James": 1, "Greg": 2, "Joey": 3, "Brendan": 4, "Connor": 5}, "2026-04-24": {"Connor": 1, "Joey": 2, "Mark": 3, "Brendan": 4, "Greg": 5, "James": 6}, "2026-04-25": {"James": 1, "Brendan": 2, "Greg": 3, "Mark": 4, "Joey": 5, "Connor": 6}, "2026-04-26": {"Joey": 1, "Mark": 2, "Brendan": 3, "Greg": 4, "James": 5, "Connor": 6}, "2026-04-27": {"Greg": 1, "Joey": 2, "James": 3, "Mark": 4, "Brendan": 5, "Connor": 6}, "2026-04-28": {"James": 1, "Brendan": 2, "Connor": 3, "Greg": 4, "Joey": 5, "Mark": 6}, "2026-04-29": {"Mark": 1, "Brendan": 2, "Joey": 3, "James": 4, "Greg": 5, "Connor": 6}, "2026-04-30": {"Brendan": 1, "James": 2, "Connor": 3, "Greg": 4, "Joey": 5, "Mark": 6}, "2026-05-01": {"James": 1, "Connor": 2, "Greg": 3, "Brendan": 4, "Joey": 5, "Mark": 6}}, "winners": {"2026-04-19": "Connor", "2026-04-20": "Connor", "2026-04-22": "James", "2026-04-23": "James", "2026-04-24": "Connor", "2026-04-25": "James", "2026-04-26": "Joey", "2026-04-27": "Greg", "2026-04-28": "James", "2026-04-29": "Mark", "2026-04-30": "Brendan", "2026-05-01": "James"}, "leaderboard": [{"name": "James", "wins": 5, "games": 10, "win_pct": 50, "avg_score": 834, "avg_finish": 2.5}, {"name": "Connor", "wins": 3, "games": 12, "win_pct": 25, "avg_score": 796, "avg_finish": 3.6}, {"name": "Mark", "wins": 1, "games": 9, "win_pct": 11, "avg_score": 752, "avg_finish": 4.1}, {"name": "Brendan", "wins": 1, "games": 11, "win_pct": 9, "avg_score": 833, "avg_finish": 2.8}, {"name": "Greg", "wins": 1, "games": 12, "win_pct": 8, "avg_score": 818, "avg_finish": 3.3}, {"name": "Joey", "wins": 1, "games": 12, "win_pct": 8, "avg_score": 800, "avg_finish": 3.6}], "stats": {"most_wins_players": "James", "most_wins_count": 5, "games_played": 66, "avg_overall": 807, "highest": 960, "highest_detail": "Connor, 04/24", "lowest": 584, "lowest_detail": "Connor, 04/25", "y_min": 550}};
 const COLORS = { James:"#2563eb", Joey:"#dc2626", Greg:"#16a34a", Brendan:"#9333ea", Connor:"#ea580c", Mark:"#0891b2" };
 
 function fmtFinish(n) {
@@ -190,6 +198,25 @@ const rows = DATA.dates.map(d => {
 });
 scoresBody.innerHTML = rows.join("");
 
+// Build Daily Finishes table
+const finishesHeaderRow = document.getElementById("finishes-header");
+const finishesHeaderCells = ["<th style='text-align: left;'>Date</th>"];
+finishesHeaderCells.push(...DATA.players.map(p => `<th>${p}</th>`));
+finishesHeaderRow.innerHTML = finishesHeaderCells.join("");
+
+const finishesBody = document.getElementById("finishes");
+const finishesRows = DATA.dates.map(d => {
+  const dayFinishes = DATA.daily_finishes[d] || {};
+  const cells = [];
+  cells.push(`<td class="date">${new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"})}</td>`);
+  for (let p of DATA.players) {
+    const finish = dayFinishes[p];
+    cells.push(`<td>${finish ? fmtFinish(finish) : "—"}</td>`);
+  }
+  return `<tr>${cells.join("")}</tr>`;
+});
+finishesBody.innerHTML = finishesRows.join("");
+
 // Score trend chart
 const allDates = DATA.dates;
 const datasets = DATA.players.map(p => ({
@@ -207,39 +234,4 @@ const datasets = DATA.players.map(p => ({
   borderWidth: 2,
 }));
 
-new Chart(document.getElementById("trend-chart"), {
-  type: "line",
-  data: {
-    labels: allDates.map(d => new Date(d + "T12:00:00").toLocaleDateString("en-US", {month: "short", day: "numeric"})),
-    datasets: datasets
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    interaction: { intersect: false, mode: "index" },
-    plugins: {
-      legend: {
-        position: "bottom",
-        labels: { boxWidth: 12, font: { size: 12 }, padding: 16, color: "#1F4E78" }
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: false,
-        min: DATA.stats.y_min,
-        max: 1000,
-        grid: { color: "#d1d5db" },
-        ticks: { font: { size: 11 }, color: "#1F4E78" }
-      },
-      x: {
-        grid: { color: "#d1d5db" },
-        ticks: { font: { size: 11 }, color: "#1F4E78" }
-      }
-    },
-  },
-});
-
-document.getElementById("subtitle").textContent = `${DATA.dates.length} days · Last updated ${new Date().toLocaleDateString("en-US", {month: "short", day: "numeric"})}`;
-</script>
-</body>
-</html>
+new Chart(document.ge
